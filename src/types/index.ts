@@ -19,3 +19,10 @@ export interface CreateIngredientRequest {
   stock: number;
   description?: string;
 }
+
+// Define the state interface
+export interface ExampleState {
+  value: number;
+  items: string[];
+  loading: boolean;
+}
