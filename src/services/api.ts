@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosRequestConfig } from 'axios';
 
 // Configuración base para las llamadas a la API
-const API_BASE_URL = process.env.BACKEND_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.BACKEND_URL || 'http://localhost:4001';
 
 export interface ApiResponse<T> {
   data: T;
@@ -32,9 +32,9 @@ const createApiService = () => {
 
   const request = async <T>(
     config: AxiosRequestConfig
-  ): Promise<ApiResponse<T>> => {
+  ): Promise<T> => {
     try {
-      const response: AxiosResponse<ApiResponse<T>> = await axiosInstance(config);
+      const response: AxiosResponse<T> = await axiosInstance(config);
       return response.data;
     } catch (error) {
       console.error('API request failed:', error);
@@ -43,7 +43,7 @@ const createApiService = () => {
   };
 
   return {
-    async get<T>(endpoint: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+    async get<T>(endpoint: string, config?: AxiosRequestConfig): Promise<T> {
       return request<T>({
         method: 'GET',
         url: endpoint,
@@ -51,7 +51,7 @@ const createApiService = () => {
       });
     },
 
-    async post<T>(endpoint: string, data?: unknown, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+    async post<T>(endpoint: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
       return request<T>({
         method: 'POST',
         url: endpoint,
