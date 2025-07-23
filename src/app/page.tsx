@@ -1,23 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
-import { ingredientsService } from "@/services/ingredients.service";
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
 
 export default function Home() {
-  useEffect(() => {
-    const fetchIngredients = async () => {
-      try {
-        const ingredients = await ingredientsService.getAllIngredients();
-        console.log("Ingredients fetched:", ingredients);
-      } catch (error) {
-        console.error("Error fetching ingredients:", error);
-      }
-    };
-
-    fetchIngredients();
-  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-yellow-50">

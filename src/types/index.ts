@@ -6,6 +6,7 @@ export interface Ingredient {
   calories: number;
   stock: number;
   description?: string;
+  img?: string;
   createdAt: string;
   updatedAt: string;
   __v: number;
@@ -18,6 +19,7 @@ export interface CreateIngredientRequest {
   calories: number;
   stock: number;
   description?: string;
+  img?: string;
 }
 
 // Define the state interface
