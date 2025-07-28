@@ -38,6 +38,33 @@ const isMeltedCheese = (queso: Ingredient): boolean => {
   return name.includes('fundido') || name.includes('melted') || name.includes('derretido');
 };
 
+// Helper function to update totals
+const updateTotals = (state: HamburguesaState) => {
+  state.precioTotal = calcularPrecioTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
+  state.caloriasTotal = calcularCaloriasTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
+};
+
+// Helper function to add ingredient to array
+const addIngredientToArray = (state: HamburguesaState, array: Ingredient[], ingredient: Ingredient) => {
+  array.push(ingredient);
+  updateTotals(state);
+};
+
+// Helper function to remove ingredient from array
+const removeIngredientFromArray = (state: HamburguesaState, array: Ingredient[], id: string) => {
+  const index = array.findIndex(item => item._id === id);
+  if (index !== -1) {
+    array.splice(index, 1);
+    updateTotals(state);
+  }
+};
+
+// Helper function to clear array
+const clearArray = (state: HamburguesaState, array: Ingredient[]) => {
+  array.length = 0;
+  updateTotals(state);
+};
+
 const hamburguesaSlice = createSlice({
   name: 'hamburguesa',
   initialState,
@@ -45,13 +72,11 @@ const hamburguesaSlice = createSlice({
     // Acciones para ingredientes únicos (pan, carne, queso)
     setPan: (state, action: PayloadAction<Ingredient>) => {
       state.ingredientes.pan = action.payload;
-      state.precioTotal = calcularPrecioTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
-      state.caloriasTotal = calcularCaloriasTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
+      updateTotals(state);
     },
     setCarne: (state, action: PayloadAction<Ingredient>) => {
       state.ingredientes.carne = action.payload;
-      state.precioTotal = calcularPrecioTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
-      state.caloriasTotal = calcularCaloriasTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
+      updateTotals(state);
     },
     setQueso: (state, action: PayloadAction<Ingredient>) => {
       state.ingredientes.queso = action.payload;
@@ -61,21 +86,18 @@ const hamburguesaSlice = createSlice({
       } else {
         state.quesoCantidad = 0; // Reset to 0 for regular cheese
       }
-      state.precioTotal = calcularPrecioTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
-      state.caloriasTotal = calcularCaloriasTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
+      updateTotals(state);
     },
     removerQueso: (state) => {
       state.ingredientes.queso = undefined;
       state.quesoCantidad = 0;
-      state.precioTotal = calcularPrecioTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
-      state.caloriasTotal = calcularCaloriasTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
+      updateTotals(state);
     },
     
     // Acción para cambiar la cantidad de carne
     setCarneCantidad: (state, action: PayloadAction<number>) => {
       state.carneCantidad = Math.max(1, Math.min(4, action.payload));
-      state.precioTotal = calcularPrecioTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
-      state.caloriasTotal = calcularCaloriasTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
+      updateTotals(state);
     },
     
     // Acción para cambiar la cantidad de queso (only for non-melted cheese)
@@ -83,100 +105,59 @@ const hamburguesaSlice = createSlice({
       // Only allow quantity changes for non-melted cheese
       if (state.ingredientes.queso && !isMeltedCheese(state.ingredientes.queso)) {
         state.quesoCantidad = Math.max(0, Math.min(4, action.payload));
-        state.precioTotal = calcularPrecioTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
-        state.caloriasTotal = calcularCaloriasTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
+        updateTotals(state);
       }
     },
     
-    // Acciones para ingredientes múltiples (vegetales, salsas, extras, bebidas, otros)
+    // Acciones para ingredientes múltiples
     agregarVegetal: (state, action: PayloadAction<Ingredient>) => {
-      state.ingredientes.vegetales.push(action.payload);
-      state.precioTotal = calcularPrecioTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
-      state.caloriasTotal = calcularCaloriasTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
+      addIngredientToArray(state, state.ingredientes.vegetales, action.payload);
     },
     removerVegetal: (state, action: PayloadAction<string>) => {
-      state.ingredientes.vegetales = state.ingredientes.vegetales.filter(
-        veg => veg._id !== action.payload
-      );
-      state.precioTotal = calcularPrecioTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
-      state.caloriasTotal = calcularCaloriasTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
+      removeIngredientFromArray(state, state.ingredientes.vegetales, action.payload);
     },
     limpiarVegetales: (state) => {
-      state.ingredientes.vegetales = [];
-      state.precioTotal = calcularPrecioTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
-      state.caloriasTotal = calcularCaloriasTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
+      clearArray(state, state.ingredientes.vegetales);
     },
     
     agregarSalsa: (state, action: PayloadAction<Ingredient>) => {
-      state.ingredientes.salsas.push(action.payload);
-      state.precioTotal = calcularPrecioTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
-      state.caloriasTotal = calcularCaloriasTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
+      addIngredientToArray(state, state.ingredientes.salsas, action.payload);
     },
     removerSalsa: (state, action: PayloadAction<string>) => {
-      state.ingredientes.salsas = state.ingredientes.salsas.filter(
-        salsa => salsa._id !== action.payload
-      );
-      state.precioTotal = calcularPrecioTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
-      state.caloriasTotal = calcularCaloriasTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
+      removeIngredientFromArray(state, state.ingredientes.salsas, action.payload);
     },
     limpiarSalsas: (state) => {
-      state.ingredientes.salsas = [];
-      state.precioTotal = calcularPrecioTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
-      state.caloriasTotal = calcularCaloriasTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
+      clearArray(state, state.ingredientes.salsas);
     },
     
     agregarExtra: (state, action: PayloadAction<Ingredient>) => {
-      state.ingredientes.extras.push(action.payload);
-      state.precioTotal = calcularPrecioTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
-      state.caloriasTotal = calcularCaloriasTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
+      addIngredientToArray(state, state.ingredientes.extras, action.payload);
     },
     removerExtra: (state, action: PayloadAction<string>) => {
-      state.ingredientes.extras = state.ingredientes.extras.filter(
-        extra => extra._id !== action.payload
-      );
-      state.precioTotal = calcularPrecioTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
-      state.caloriasTotal = calcularCaloriasTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
+      removeIngredientFromArray(state, state.ingredientes.extras, action.payload);
     },
     limpiarExtras: (state) => {
-      state.ingredientes.extras = [];
-      state.precioTotal = calcularPrecioTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
-      state.caloriasTotal = calcularCaloriasTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
+      clearArray(state, state.ingredientes.extras);
     },
     
     agregarBebida: (state, action: PayloadAction<Ingredient>) => {
-      state.ingredientes.bebidas.push(action.payload);
-      state.precioTotal = calcularPrecioTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
-      state.caloriasTotal = calcularCaloriasTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
+      addIngredientToArray(state, state.ingredientes.bebidas, action.payload);
     },
     removerBebida: (state, action: PayloadAction<string>) => {
-      state.ingredientes.bebidas = state.ingredientes.bebidas.filter(
-        bebida => bebida._id !== action.payload
-      );
-      state.precioTotal = calcularPrecioTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
-      state.caloriasTotal = calcularCaloriasTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
+      removeIngredientFromArray(state, state.ingredientes.bebidas, action.payload);
     },
     limpiarBebidas: (state) => {
-      state.ingredientes.bebidas = [];
-      state.precioTotal = calcularPrecioTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
-      state.caloriasTotal = calcularCaloriasTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
+      clearArray(state, state.ingredientes.bebidas);
     },
     
     agregarOtro: (state, action: PayloadAction<Ingredient>) => {
-      state.ingredientes.otros.push(action.payload);
-      state.precioTotal = calcularPrecioTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
-      state.caloriasTotal = calcularCaloriasTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
+      addIngredientToArray(state, state.ingredientes.otros, action.payload);
     },
     removerOtro: (state, action: PayloadAction<string>) => {
-      state.ingredientes.otros = state.ingredientes.otros.filter(
-        otro => otro._id !== action.payload
-      );
-      state.precioTotal = calcularPrecioTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
-      state.caloriasTotal = calcularCaloriasTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
+      removeIngredientFromArray(state, state.ingredientes.otros, action.payload);
     },
     limpiarOtros: (state) => {
-      state.ingredientes.otros = [];
-      state.precioTotal = calcularPrecioTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
-      state.caloriasTotal = calcularCaloriasTotal(state.ingredientes, state.carneCantidad, state.quesoCantidad);
+      clearArray(state, state.ingredientes.otros);
     },
     
     // Acción para limpiar toda la hamburguesa
