@@ -128,7 +128,7 @@ export default function OrderModal({
                         height={32}
                         className="rounded-full object-cover"
                         onError={() =>
-                          handleImageError(hamburguesaIngredientes.pan.img!)
+                          hamburguesaIngredientes.pan?.img && handleImageError(hamburguesaIngredientes.pan.img)
                         }
                       />
                     )}
@@ -158,7 +158,7 @@ export default function OrderModal({
                         height={32}
                         className="rounded-full object-cover"
                         onError={() =>
-                          handleImageError(hamburguesaIngredientes.carne.img!)
+                          hamburguesaIngredientes.carne?.img && handleImageError(hamburguesaIngredientes.carne.img)
                         }
                       />
                     )}
@@ -190,7 +190,7 @@ export default function OrderModal({
                         height={32}
                         className="rounded-full object-cover"
                         onError={() =>
-                          handleImageError(hamburguesaIngredientes.queso.img!)
+                          hamburguesaIngredientes.queso?.img && handleImageError(hamburguesaIngredientes.queso.img)
                         }
                       />
                     )}
