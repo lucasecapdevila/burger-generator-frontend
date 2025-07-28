@@ -194,6 +194,11 @@ export default function CrearHamburguesa() {
   const handleContinueToExtras = () => setCurrentStep('extras');
   const handleContinueToBebidas = () => setCurrentStep('bebidas');
 
+  // ProgressSteps navigation handler
+  const handleStepClick = (step: 'pan' | 'carne' | 'queso' | 'vegetales' | 'salsas' | 'otros' | 'extras' | 'bebidas') => {
+    setCurrentStep(step);
+  };
+
   const getStepTitle = () => {
     switch (currentStep) {
       case 'pan':
@@ -297,6 +302,7 @@ export default function CrearHamburguesa() {
           hasOtros={hamburguesaIngredientes.otros.length > 0}
           hasExtras={hamburguesaIngredientes.extras.length > 0}
           hasBebidas={hamburguesaIngredientes.bebidas.length > 0}
+          onStepClick={handleStepClick}
         />
 
         {/* Current Step Selection */}
@@ -422,8 +428,8 @@ export default function CrearHamburguesa() {
               Volver al Inicio
             </Link>
             
-            {/* Botón Finalizar Pedido - solo se muestra al final (paso bebidas) */}
-            {currentStep === 'bebidas' && hamburguesaIngredientes.pan && hamburguesaIngredientes.carne && (
+            {/* Botón Finalizar Pedido - se muestra una vez que se llega al paso bebidas */}
+            {currentStep === 'bebidas' && (
               <button
                 onClick={() => setIsModalOpen(true)}
                 className="inline-flex items-center justify-center px-6 py-3 bg-orange-600 text-white font-medium rounded-lg hover:bg-orange-700 transition-colors duration-200"
