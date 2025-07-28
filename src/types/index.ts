@@ -28,3 +28,6 @@ export interface ExampleState {
   items: string[];
   loading: boolean;
 }
+
+// Define the step types for navigation
+export type StepType = 'pan' | 'carne' | 'queso' | 'vegetales' | 'salsas' | 'otros' | 'extras' | 'bebidas';

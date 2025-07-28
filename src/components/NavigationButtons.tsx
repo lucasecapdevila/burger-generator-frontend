@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { StepType } from '@/types';
 
 interface NavigationButtonsProps {
   currentStep: StepType;
