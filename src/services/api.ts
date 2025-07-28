@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosRequestConfig } from 'axios';
 
 // Configuración base para las llamadas a la API
-const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.BACKEND_URL || 'http://localhost:4001';
+const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL
 
 export interface ApiResponse<T> {
   data: T;
