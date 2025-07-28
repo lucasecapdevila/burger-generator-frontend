@@ -14,7 +14,7 @@ export interface Ingredient {
 
 export interface CreateIngredientRequest {
   name: string;
-  category: string;
+  category: 'Pan' | 'Carne' | 'Queso' | 'Vegetales' | 'Salsas' | 'Extras' | 'Bebidas' | 'Otros';
   price: number;
   calories: number;
   stock: number;

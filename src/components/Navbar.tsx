@@ -2,9 +2,12 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { isActiveRoute } from '@/routes/public.routes';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <nav className="bg-orange-600 text-white shadow-lg">
@@ -24,33 +27,53 @@ export default function Navbar() {
             <div className="ml-10 flex items-baseline space-x-4">
               <Link
                 href="/"
-                className="px-3 py-2 rounded-md text-sm font-medium hover:bg-orange-700 transition-colors duration-200"
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                  isActiveRoute(pathname, '/') 
+                    ? 'bg-orange-700 text-white' 
+                    : 'hover:bg-orange-700'
+                }`}
               >
                 Inicio
               </Link>
               <Link
-                href="#"
-                className="px-3 py-2 rounded-md text-sm font-medium hover:bg-orange-700 transition-colors duration-200"
+                href="/crear-hamburguesa"
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                  isActiveRoute(pathname, '/crear-hamburguesa') 
+                    ? 'bg-orange-700 text-white' 
+                    : 'hover:bg-orange-700'
+                }`}
               >
-                Ingredientes
+                Crear Hamburguesa
               </Link>
               <Link
-                href="#"
-                className="px-3 py-2 rounded-md text-sm font-medium hover:bg-orange-700 transition-colors duration-200"
+                href="/menu"
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                  isActiveRoute(pathname, '/menu') 
+                    ? 'bg-orange-700 text-white' 
+                    : 'hover:bg-orange-700'
+                }`}
               >
                 Menú
               </Link>
               <Link
-                href="#"
-                className="px-3 py-2 rounded-md text-sm font-medium hover:bg-orange-700 transition-colors duration-200"
+                href="/acerca-de"
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                  isActiveRoute(pathname, '/acerca-de') 
+                    ? 'bg-orange-700 text-white' 
+                    : 'hover:bg-orange-700'
+                }`}
               >
-                Carrito
+                Acerca de
               </Link>
               <Link
-                href="#"
-                className="px-3 py-2 rounded-md text-sm font-medium hover:bg-orange-700 transition-colors duration-200"
+                href="/contacto"
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                  isActiveRoute(pathname, '/contacto') 
+                    ? 'bg-orange-700 text-white' 
+                    : 'hover:bg-orange-700'
+                }`}
               >
-                Admin
+                Contacto
               </Link>
             </div>
           </div>
@@ -102,33 +125,53 @@ export default function Navbar() {
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
           <Link
             href="/"
-            className="block px-3 py-2 rounded-md text-base font-medium hover:bg-orange-700 transition-colors duration-200"
+            className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${
+              isActiveRoute(pathname, '/') 
+                ? 'bg-orange-700 text-white' 
+                : 'hover:bg-orange-700'
+            }`}
           >
             Inicio
           </Link>
           <Link
-            href="#"
-            className="block px-3 py-2 rounded-md text-base font-medium hover:bg-orange-700 transition-colors duration-200"
+            href="/crear-hamburguesa"
+            className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${
+              isActiveRoute(pathname, '/crear-hamburguesa') 
+                ? 'bg-orange-700 text-white' 
+                : 'hover:bg-orange-700'
+            }`}
           >
-            Ingredientes
+            Crear Hamburguesa
           </Link>
           <Link
-            href="#"
-            className="block px-3 py-2 rounded-md text-base font-medium hover:bg-orange-700 transition-colors duration-200"
+            href="/menu"
+            className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${
+              isActiveRoute(pathname, '/menu') 
+                ? 'bg-orange-700 text-white' 
+                : 'hover:bg-orange-700'
+            }`}
           >
             Menú
           </Link>
           <Link
-            href="#"
-            className="block px-3 py-2 rounded-md text-base font-medium hover:bg-orange-700 transition-colors duration-200"
+            href="/acerca-de"
+            className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${
+              isActiveRoute(pathname, '/acerca-de') 
+                ? 'bg-orange-700 text-white' 
+                : 'hover:bg-orange-700'
+            }`}
           >
-            Carrito
+            Acerca de
           </Link>
           <Link
-            href="#"
-            className="block px-3 py-2 rounded-md text-base font-medium hover:bg-orange-700 transition-colors duration-200"
+            href="/contacto"
+            className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${
+              isActiveRoute(pathname, '/contacto') 
+                ? 'bg-orange-700 text-white' 
+                : 'hover:bg-orange-700'
+            }`}
           >
-            Admin
+            Contacto
           </Link>
         </div>
       </div>
